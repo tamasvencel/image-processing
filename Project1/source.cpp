@@ -53,46 +53,46 @@ void showMyImage(Mat& imBig, Mat& im, int& index) {
 }
 
 void lab02() {
-    // Betöltjük a színes képet
+    // BetÃ¶ltjÃ¼k a szÃ­nes kÃ©pet
     Mat im = imread("eper.jpg", 1);
     if (im.empty()) {
-        cerr << "Nem sikerült betölteni a képet!" << endl;
+        cerr << "Nem sikerÃ¼lt betÃ¶lteni a kÃ©pet!" << endl;
         return;
     }
 
-    // Szétszedjük a kép színcsatornáit
+    // SzÃ©tszedjÃ¼k a kÃ©p szÃ­ncsatornÃ¡it
     Mat bgr[3], &b = bgr[0], &g = bgr[1], &r = bgr[2], z(im.rows, im.cols, CV_8UC1, Scalar(0));
-    split(im, bgr); // BGR csatornák szétszedése
+    split(im, bgr); // BGR csatornÃ¡k szÃ©tszedÃ©se
 
-    // Létrehozunk egy nagyobb képet a mozaikszerû elrendezéshez
+    // LÃ©trehozunk egy nagyobb kÃ©pet a mozaikszerÃ» elrendezÃ©shez
     Mat imBig = Mat(im.rows * 3, im.cols * 6, im.type());
-    imBig.setTo(Scalar(128, 128, 255)); // Színes háttér
+    imBig.setTo(Scalar(128, 128, 255)); // SzÃ­nes hÃ¡ttÃ©r
 
     int index = 0;
 
     showMyImage(imBig, im, index);
 
-    // 1. Egy-egy színcsatorna nullázása
+    // 1. Egy-egy szÃ­ncsatorna nullÃ¡zÃ¡sa
     Mat result = im.clone();
-    merge(vector<Mat>{z, g, r}, result); // Kék csatorna 0
+    merge(vector<Mat>{z, g, r}, result); // KÃ©k csatorna 0
     showMyImage(imBig, result, index);
-    merge(vector<Mat>{b, z, r}, result); // Zöld csatorna 0
+    merge(vector<Mat>{b, z, r}, result); // ZÃ¶ld csatorna 0
     showMyImage(imBig, result, index);
-    merge(vector<Mat>{b, g, z}, result); // Vörös csatorna 0
-    showMyImage(imBig, result, index);
-
-    // 2. Két-két színcsatorna nullázása
-    merge(vector<Mat>{z, z, r}, result); // Csak vörös
-    showMyImage(imBig, result, index);
-    merge(vector<Mat>{z, g, z}, result); // Csak zöld
-    showMyImage(imBig, result, index);
-    merge(vector<Mat>{b, z, z}, result); // Csak kék
+    merge(vector<Mat>{b, g, z}, result); // VÃ¶rÃ¶s csatorna 0
     showMyImage(imBig, result, index);
 
-    // 3. Színcsatornák permutálása
+    // 2. KÃ©t-kÃ©t szÃ­ncsatorna nullÃ¡zÃ¡sa
+    merge(vector<Mat>{z, z, r}, result); // Csak vÃ¶rÃ¶s
+    showMyImage(imBig, result, index);
+    merge(vector<Mat>{z, g, z}, result); // Csak zÃ¶ld
+    showMyImage(imBig, result, index);
+    merge(vector<Mat>{b, z, z}, result); // Csak kÃ©k
+    showMyImage(imBig, result, index);
+
+    // 3. SzÃ­ncsatornÃ¡k permutÃ¡lÃ¡sa
     merge(vector<Mat>{b, g, r}, result);
     showMyImage(imBig, result, index);
-    merge(vector<Mat>{r, g, b}, result); // RGB (eredeti BGR, de R és B felcserélve)
+    merge(vector<Mat>{r, g, b}, result); // RGB (eredeti BGR, de R Ã©s B felcserÃ©lve)
     showMyImage(imBig, result, index);
     merge(vector<Mat>{g, b, r}, result); // GBR
     showMyImage(imBig, result, index);
@@ -103,25 +103,25 @@ void lab02() {
     merge(vector<Mat>{r, b, g}, result); // RBG
     showMyImage(imBig, result, index);
 
-    // 4. Egy színkomponens helyettesítése a saját negatívjával
-    Mat ib = ~b, ig = ~g, ir = ~r; // Negatív színcsatornák
-    merge(vector<Mat>{ib, g, r}, result); // Negatív kék
+    // 4. Egy szÃ­nkomponens helyettesÃ­tÃ©se a sajÃ¡t negatÃ­vjÃ¡val
+    Mat ib = ~b, ig = ~g, ir = ~r; // NegatÃ­v szÃ­ncsatornÃ¡k
+    merge(vector<Mat>{ib, g, r}, result); // NegatÃ­v kÃ©k
     showMyImage(imBig, result, index);
-    merge(vector<Mat>{b, ig, r}, result); // Negatív zöld
+    merge(vector<Mat>{b, ig, r}, result); // NegatÃ­v zÃ¶ld
     showMyImage(imBig, result, index);
-    merge(vector<Mat>{b, g, ir}, result); // Negatív vörös
+    merge(vector<Mat>{b, g, ir}, result); // NegatÃ­v vÃ¶rÃ¶s
     showMyImage(imBig, result, index);
 
-    // 5. Y komponens helyettesítése a saját negatívjával (YCrCb kódolás)
+    // 5. Y komponens helyettesÃ­tÃ©se a sajÃ¡t negatÃ­vjÃ¡val (YCrCb kÃ³dolÃ¡s)
     Mat ycrcb, ycrcb_split[3];
     cvtColor(im, ycrcb, COLOR_BGR2YCrCb); // BGR -> YCrCb
-    split(ycrcb, ycrcb_split); // YCrCb színcsatornák szétválasztása
-    ycrcb_split[0] = ~ycrcb_split[0]; // Y csatorna negatívja
-    merge(ycrcb_split, 3, ycrcb); // YCrCb csatornák összeállítása
+    split(ycrcb, ycrcb_split); // YCrCb szÃ­ncsatornÃ¡k szÃ©tvÃ¡lasztÃ¡sa
+    ycrcb_split[0] = ~ycrcb_split[0]; // Y csatorna negatÃ­vja
+    merge(ycrcb_split, 3, ycrcb); // YCrCb csatornÃ¡k Ã¶sszeÃ¡llÃ­tÃ¡sa
     cvtColor(ycrcb, result, COLOR_YCrCb2BGR); // YCrCb -> BGR
     showMyImage(imBig, result, index);
 
-    // 6. Az eredeti kép negatívja
+    // 6. Az eredeti kÃ©p negatÃ­vja
     Mat im_neg = ~im;
     showMyImage(imBig, im_neg, index);
 }
@@ -342,34 +342,34 @@ uchar getChannel(Mat im, int x, int y, int c) {
 
 const int Ng = 256;
 void drawHist(Mat im) {
-    // erre a képre rajzoljuk a hisztogramot
+    // erre a kÃ©pre rajzoljuk a hisztogramot
     Mat imHist(Size(3 * Ng, Ng * im.channels()), im.type());
     for (int ch = 0; ch < im.channels(); ++ch) {
         Mat roi = imHist(Rect(0, Ng * ch, 3 * Ng, Ng));
         roi.setTo(Scalar((ch == 0) * (Ng - 1), (ch == 1) * (Ng - 1), (ch == 2) * (Ng - 1), 0));
-        // kiszámoljuk a hisztogramot a ch csatornán
+        // kiszÃ¡moljuk a hisztogramot a ch csatornÃ¡n
         int hist[Ng] = { 0 };
         for (int y = 0; y < im.rows; ++y) {
             for (int x = 0; x < im.cols; ++x)
                 hist[getChannel(im, x, y, ch)]++;
         }
-        // megkeressük a leggyakoribb intenzitás számosságát
+        // megkeressÃ¼k a leggyakoribb intenzitÃ¡s szÃ¡mossÃ¡gÃ¡t
         int maxCol = 0;
         for (int i = 0; i < Ng; ++i) {
             if (hist[i] > maxCol) {
                 maxCol = hist[i];
             }
         }
-        // megrajzoljuk a hisztogramot a ch csatornán, fentrõl lógó oszlopokkal
+        // megrajzoljuk a hisztogramot a ch csatornÃ¡n, fentrÃµl lÃ³gÃ³ oszlopokkal
         for (int i = 0; i < Ng; ++i) {
-            // hármasszabály
+            // hÃ¡rmasszabÃ¡ly
             int colHeight = round(250 * hist[i] / maxCol);
             if (colHeight > 0) {
                 roi = imHist(Rect(3 * i, Ng * ch, 3, colHeight));
                 roi.setTo(Scalar(i, i, i, 0));
             }
         }
-        // tükrözzük a kirajzolt hisztogramot, hogy álló oszlopaink legyenek
+        // tÃ¼krÃ¶zzÃ¼k a kirajzolt hisztogramot, hogy Ã¡llÃ³ oszlopaink legyenek
         roi = imHist(Rect(0, Ng * ch, 3 * Ng, Ng));
         flip(roi, roi, 0);
     }
@@ -428,19 +428,19 @@ void equalizeHistogram(Mat im) {
     if (!(im.channels() % 2)) {
         return;
     }
-    // ha színes a kép, átalakítjuk YCrCb kódolásra
+    // ha szÃ­nes a kÃ©p, Ã¡talakÃ­tjuk YCrCb kÃ³dolÃ¡sra
     if (im.channels() == 3) {
         cvtColor(im, im, COLOR_BGR2YCrCb); // BGR -> YCrCb
     }
-    // most mindenképpen a 0-ás színcsatornát kell nekünk kiegyenlíteni
-    // kiszámoljuk a hisztogramot a 0-ás csatornán
+    // most mindenkÃ©ppen a 0-Ã¡s szÃ­ncsatornÃ¡t kell nekÃ¼nk kiegyenlÃ­teni
+    // kiszÃ¡moljuk a hisztogramot a 0-Ã¡s csatornÃ¡n
     int H[Ng] = { 0 };
     for (int x = 0; x < im.cols; ++x) {
         for (int y = 0; y < im.rows; ++y) {
             H[*im.ptr(y, x)]++;
         }
     }
-    // kiszámoljuk az új színeket
+    // kiszÃ¡moljuk az Ãºj szÃ­neket
     int uj[Ng];
     int sum = 0;
     for (int n = 0; n < Ng; ++n) {
@@ -448,13 +448,13 @@ void equalizeHistogram(Mat im) {
         if (uj[n] > Ng - 1) uj[n] = Ng - 1;
         sum += H[n];
     }
-    // átfestjük a képet az új színekkel, a 0-ás csatornán
+    // Ã¡tfestjÃ¼k a kÃ©pet az Ãºj szÃ­nekkel, a 0-Ã¡s csatornÃ¡n
     for (int x = 0; x < im.cols; ++x) {
         for (int y = 0; y < im.rows; ++y) {
             im.ptr(y, x)[0] = uj[*im.ptr(y, x)];
         }
     }
-    // ha színes a kép, visszaalakítjuk BGR kódolásra
+    // ha szÃ­nes a kÃ©p, visszaalakÃ­tjuk BGR kÃ³dolÃ¡sra
     if (im.channels() == 3) {
         cvtColor(im, im, COLOR_YCrCb2BGR);
     }
@@ -929,10 +929,10 @@ void lab07() {
             v[i] = 255.0f * (i + 1.0f) / (2.0f * c);
         }
 
-        // A konvergenciához húsz ciklus elég lesz
+        // A konvergenciÃ¡hoz hÃºsz ciklus elÃ©g lesz
         for (int ciklus = 0; ciklus < 20; ++ciklus) {
-            // A partíciós matrix újraszámítása. Beiktattunk egy védelmet arra az esetre amikor d2[][]
-            // valamely értéke zéró, mert ilyenkor zéróval kellene osztanunk
+            // A partÃ­ciÃ³s matrix ÃºjraszÃ¡mÃ­tÃ¡sa. Beiktattunk egy vÃ©delmet arra az esetre amikor d2[][]
+            // valamely Ã©rtÃ©ke zÃ©rÃ³, mert ilyenkor zÃ©rÃ³val kellene osztanunk
             for (int l = 0; l < Ng; ++l) {
                 for (int i = 0; i < c; ++i) {
                     d2[i][l] = (l - v[i]) * (l - v[i]);
@@ -960,7 +960,7 @@ void lab07() {
                     }
                 }
             }
-            // az osztályprototípusok újraszámolása
+            // az osztÃ¡lyprototÃ­pusok ÃºjraszÃ¡molÃ¡sa
             for (int i = 0; i < c; ++i) {
                 float sumUp = 0.0f;
                 float sumDn = 0.0f;
@@ -1149,14 +1149,14 @@ int compare(const void* p1, const void* p2) {
 void lab09() {
 	const uchar bits[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
 
-	// a kifelé folyás irányainak x és y komponense
+	// a kifelÃ© folyÃ¡s irÃ¡nyainak x Ã©s y komponense
 	const int dx[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
 	const int dy[8] = { 0, -1, -1, -1, 0, 1, 1, 1 };
 
-	// betöltjük a szegmentálandó színes képet
+	// betÃ¶ltjÃ¼k a szegmentÃ¡landÃ³ szÃ­nes kÃ©pet
 	Mat imColor = imread("3.jpg", 1);
 
-	// készítünk belõle egy szürke verziót
+	// kÃ©szÃ­tÃ¼nk belÃµle egy szÃ¼rke verziÃ³t
 	Mat imO(imColor.cols, imColor.rows, CV_8UC1);
 	cvtColor(imColor, imO, COLOR_BGR2GRAY);
 
@@ -1166,45 +1166,45 @@ void lab09() {
 	imshow("Szurke", imO);
 	waitKey();
 
-	// Ez a kép tárolja majd a kiszámított gradiens értéket minden képpontban
+	// Ez a kÃ©p tÃ¡rolja majd a kiszÃ¡mÃ­tott gradiens Ã©rtÃ©ket minden kÃ©ppontban
 	Mat imG = imO.clone();
 
-	// Ez a kép tárolja majd minden képpont szomszédságában található legkisebb gradiens értéket
+	// Ez a kÃ©p tÃ¡rolja majd minden kÃ©ppont szomszÃ©dsÃ¡gÃ¡ban talÃ¡lhatÃ³ legkisebb gradiens Ã©rtÃ©ket
 	Mat imE = imO.clone();
 
-	// Ez a kép tárolja a kifele folyás irányát minden képpontban
+	// Ez a kÃ©p tÃ¡rolja a kifele folyÃ¡s irÃ¡nyÃ¡t minden kÃ©ppontban
 	Mat imKi = imO.clone();
 
-	// Ez a kép tárolja a befele folyás irányait (bitenként) minden képpontban
+	// Ez a kÃ©p tÃ¡rolja a befele folyÃ¡s irÃ¡nyait (bitenkÃ©nt) minden kÃ©ppontban
 	Mat imBe = imO.clone();
 
-	// A szegmentált kép lesz (vízgyûjtõk átlagolt színével)
+	// A szegmentÃ¡lt kÃ©p lesz (vÃ­zgyÃ»jtÃµk Ã¡tlagolt szÃ­nÃ©vel)
 	Mat imSegm = imColor.clone();
 
-	// A szegmentált kép lesz (vízgyûjtõk medián színével)
+	// A szegmentÃ¡lt kÃ©p lesz (vÃ­zgyÃ»jtÃµk mediÃ¡n szÃ­nÃ©vel)
 	Mat imSegmMed = imColor.clone();
 
-	// Bináris kép mely megmutatja, hogy melyik képpontokban állítottuk már be a kifele folyást
+	// BinÃ¡ris kÃ©p mely megmutatja, hogy melyik kÃ©ppontokban Ã¡llÃ­tottuk mÃ¡r be a kifele folyÃ¡st
 	Mat imMap = imO.clone();
 
-	// Gradiensek számításához használt 16 bites elõjeles kódolású kép
+	// Gradiensek szÃ¡mÃ­tÃ¡sÃ¡hoz hasznÃ¡lt 16 bites elÃµjeles kÃ³dolÃ¡sÃº kÃ©p
 	Mat imL(imColor.cols, imColor.rows, CV_16SC1);
 
-	// felbontjuk a színes képet színcsatornáira
+	// felbontjuk a szÃ­nes kÃ©pet szÃ­ncsatornÃ¡ira
 	vector<Mat> imColors;
 	split(imColor, imColors);
 
-	// A bemeneti kép három színcsatornáját fogjuk itt tárolni, ezekbõl számoljuk a
+	// A bemeneti kÃ©p hÃ¡rom szÃ­ncsatornÃ¡jÃ¡t fogjuk itt tÃ¡rolni, ezekbÃµl szÃ¡moljuk a
 	// gradienseket
 	Mat imRed = imColors[2];
 	Mat imGreen = imColors[1];
 	Mat imBlue = imColors[0];
 
-	// Ezen a képen összegezzük a három színcsatorna gradienseit
+	// Ezen a kÃ©pen Ã¶sszegezzÃ¼k a hÃ¡rom szÃ­ncsatorna gradienseit
 	Mat imSum = imO.clone();
 	imSum.setTo(Scalar(0));
 
-	// kék színcsatorna gradienseit adjuk hozzá az imSum-hoz
+	// kÃ©k szÃ­ncsatorna gradienseit adjuk hozzÃ¡ az imSum-hoz
 	Sobel(imBlue, imL, imL.depth(), 1, 0);
 	convertScaleAbs(imL, imE);
 	Sobel(imBlue, imL, imL.depth(), 0, 1);
@@ -1212,7 +1212,7 @@ void lab09() {
 	add(imE, imG, imG);
 	addWeighted(imSum, 1, imG, 0.33333, 0, imSum);
 
-	// zõd színcsatorna gradienseit adjuk hozzá az imSum-hoz
+	// zÃµd szÃ­ncsatorna gradienseit adjuk hozzÃ¡ az imSum-hoz
 	Sobel(imGreen, imL, imL.depth(), 1, 0);
 	convertScaleAbs(imL, imE);
 	Sobel(imGreen, imL, imL.depth(), 0, 1);
@@ -1220,7 +1220,7 @@ void lab09() {
 	add(imE, imG, imG);
 	addWeighted(imSum, 1, imG, 0.33333, 0, imSum);
 
-	// vörös színcsatorna gradienseit adjuk hozzá az imSum-hoz
+	// vÃ¶rÃ¶s szÃ­ncsatorna gradienseit adjuk hozzÃ¡ az imSum-hoz
 	Sobel(imRed, imL, imL.depth(), 1, 0);
 	convertScaleAbs(imL, imE);
 	Sobel(imRed, imL, imL.depth(), 0, 1);
@@ -1228,61 +1228,61 @@ void lab09() {
 	add(imE, imG, imG);
 	addWeighted(imSum, 1, imG, 0.33333, 0, imG);
 
-	// Az összesített gradiens az imG képbe került
-	//Elõfeldolgozási lépés, amelyek közül csak egyiket használjuk
-	// 1 - gradiensek csonkolása
+	// Az Ã¶sszesÃ­tett gradiens az imG kÃ©pbe kerÃ¼lt
+	//ElÃµfeldolgozÃ¡si lÃ©pÃ©s, amelyek kÃ¶zÃ¼l csak egyiket hasznÃ¡ljuk
+	// 1 - gradiensek csonkolÃ¡sa
 	//cvCmpS(imG, 32, imE, CV_CMP_LT);
 	//cvSub(imG, imG, imG, imE);
-	// 2 - a gradiensek kisimítása egy Gauss-féle aluláteresztõ szûrõvel
+	// 2 - a gradiensek kisimÃ­tÃ¡sa egy Gauss-fÃ©le alulÃ¡teresztÃµ szÃ»rÃµvel
 	GaussianBlur(imG, imG, Size(9, 9), 0);
 	imshow("Gradiens", imG);
 	waitKey();
 
-	// Step 0 - inicializálás
-	// Erodált gradiensek kiszámítása - a szomszédságban levõ legkisebb gradiensek kiszámítása
+	// Step 0 - inicializÃ¡lÃ¡s
+	// ErodÃ¡lt gradiensek kiszÃ¡mÃ­tÃ¡sa - a szomszÃ©dsÃ¡gban levÃµ legkisebb gradiensek kiszÃ¡mÃ­tÃ¡sa
 	erode(imG, imE, getStructuringElement(MORPH_RECT, Size(3, 3)));
 
-	// A szegmentált képeket inicializáljuk egy szürke árnyalattal, ezeket elvileg mind felül fogja írni az algoritmus
+	// A szegmentÃ¡lt kÃ©peket inicializÃ¡ljuk egy szÃ¼rke Ã¡rnyalattal, ezeket elvileg mind felÃ¼l fogja Ã­rni az algoritmus
 	imSegm.setTo(Scalar(50, 50, 50));
 	imSegmMed.setTo(Scalar(150, 150, 150));
 
-	// Egyik pixelnél sincs befelé folyás kezdetben
+	// Egyik pixelnÃ©l sincs befelÃ© folyÃ¡s kezdetben
 	imBe.setTo(Scalar(0));
 
-	// Valódi kifelé folyási irányok: 0..7, 8 azt jelenti, hogy az adott pixelnél még nincs eldöntve a kifelé folyás iránya
+	// ValÃ³di kifelÃ© folyÃ¡si irÃ¡nyok: 0..7, 8 azt jelenti, hogy az adott pixelnÃ©l mÃ©g nincs eldÃ¶ntve a kifelÃ© folyÃ¡s irÃ¡nya
 	imKi.setTo(Scalar(8));
 
-	// Kezdetben sehol nincs még eldöntve a kifelé folyás iránya
+	// Kezdetben sehol nincs mÃ©g eldÃ¶ntve a kifelÃ© folyÃ¡s irÃ¡nya
 	imMap.setTo(Scalar(0));
 
-	// Step 1 - keressük meg és kezeljük le az összes képpontot, ahol a gradiens térkép lejtõs
-		// Bejárjuk a képet (x,y)-nal
+	// Step 1 - keressÃ¼k meg Ã©s kezeljÃ¼k le az Ã¶sszes kÃ©ppontot, ahol a gradiens tÃ©rkÃ©p lejtÃµs
+		// BejÃ¡rjuk a kÃ©pet (x,y)-nal
 	for (int x = 0; x < imBe.cols; ++x) {
 		for (int y = 0; y < imBe.rows; ++y) {
 			int fp = getGray(imG, x, y);
 			int q = getGray(imE, x, y);
-			// ahol az erodált gradiens kisebb a lokális gradiensnél, ott lejtõs helyen vagyunk
+			// ahol az erodÃ¡lt gradiens kisebb a lokÃ¡lis gradiensnÃ©l, ott lejtÃµs helyen vagyunk
 			if (q < fp) {
-				// megkeressük, hogy melyik irányba a legmeredekebb a lejtõ
+				// megkeressÃ¼k, hogy melyik irÃ¡nyba a legmeredekebb a lejtÃµ
 				for (uchar irany = 0; irany < 8; ++irany) {
-					// létezik-e a vizsgált koordinátájú szomszéd
+					// lÃ©tezik-e a vizsgÃ¡lt koordinÃ¡tÃ¡jÃº szomszÃ©d
 					if (x + dx[irany] >= 0 && x + dx[irany] < imBe.cols && y + dy[irany]
 						>= 0 &&
 						y + dy[irany] < imBe.rows) {
 						int fpv = getGray(imG, x + dx[irany], y + dy[irany]);
-						// ha az adott irany szerinti szomszéd gradiense annyi mint a
-						// minimum gradiens a szomszédságban...
+						// ha az adott irany szerinti szomszÃ©d gradiense annyi mint a
+						// minimum gradiens a szomszÃ©dsÃ¡gban...
 						if (fpv == q) {
-							//...akkor beállítjuk a kifelé folyást az adott szomszéd irányába
+							//...akkor beÃ¡llÃ­tjuk a kifelÃ© folyÃ¡st az adott szomszÃ©d irÃ¡nyÃ¡ba
 							setGray(imKi, x, y, irany);
-							// bejelöljük, hogy az (x,y) képpontban megvan a kifelé folyás iránya
+							// bejelÃ¶ljÃ¼k, hogy az (x,y) kÃ©ppontban megvan a kifelÃ© folyÃ¡s irÃ¡nya
 							setGray(imMap, x, y, 255);
-							// kiolvassuk a befelé folyás bitjeit a szomszédban...
+							// kiolvassuk a befelÃ© folyÃ¡s bitjeit a szomszÃ©dban...
 							uchar volt = getGray(imBe, x + dx[irany], y + dy[irany]);
-							// megmódosítjuk ...
+							// megmÃ³dosÃ­tjuk ...
 							uchar adunk = bits[irany];
 							uchar lesz = volt | adunk;
-							// és visszaírjuk
+							// Ã©s visszaÃ­rjuk
 							setGray(imBe, x + dx[irany], y + dy[irany], lesz);
 							break;
 						}
@@ -1292,27 +1292,27 @@ void lab09() {
 		}
 	}
 
-	// megmutatjuk egy ablakban a lekezelt képpontok térképét és várunk gombnyomásra
-	imshow("Lekezelt képpontok térképe", imMap);
+	// megmutatjuk egy ablakban a lekezelt kÃ©ppontok tÃ©rkÃ©pÃ©t Ã©s vÃ¡runk gombnyomÃ¡sra
+	imshow("Lekezelt kÃ©ppontok tÃ©rkÃ©pe", imMap);
 	waitKey();
 
-	// Step 2 - fennsíkon levõ pontok lekezelése a gradiens térképen
-	// Kell egy FIFO lista amire képpontokat fogunk elhelyezni
+	// Step 2 - fennsÃ­kon levÃµ pontok lekezelÃ©se a gradiens tÃ©rkÃ©pen
+	// Kell egy FIFO lista amire kÃ©ppontokat fogunk elhelyezni
 	Point* fifo = new Point[imBe.cols * imBe.rows];
 	int nextIn = 0;
 	int nextOut = 0;
 
-	// Bejárjuk a képet (x,y)-nal
+	// BejÃ¡rjuk a kÃ©pet (x,y)-nal
 	for (int x = 0; x < imBe.cols; ++x) {
 		for (int y = 0; y < imBe.rows; ++y) {
-			// olyan képpontot keresünk, ahol már el van döntve a kifelé folyás iránya de
-			// van olyan szomszédja, ahol még nincs eldöntve
+			// olyan kÃ©ppontot keresÃ¼nk, ahol mÃ¡r el van dÃ¶ntve a kifelÃ© folyÃ¡s irÃ¡nya de
+			// van olyan szomszÃ©dja, ahol mÃ©g nincs eldÃ¶ntve
 			int fp = getGray(imG, x, y);
 			int pout = getGray(imKi, x, y);
 			if (pout == 8) continue;
-			// találtunk egy olyan képpontot, ahol a kifelé folyás iránya már el van döntve ...
+			// talÃ¡ltunk egy olyan kÃ©ppontot, ahol a kifelÃ© folyÃ¡s irÃ¡nya mÃ¡r el van dÃ¶ntve ...
 			int added = 0;
-			// ... és vizsgáljuk annak a szomszédjait
+			// ... Ã©s vizsgÃ¡ljuk annak a szomszÃ©djait
 			for (uchar irany = 0; irany < 8; ++irany) {
 				if (x + dx[irany] >= 0 && x + dx[irany] < imBe.cols && y + dy[irany] >= 0
 					&&
@@ -1320,9 +1320,9 @@ void lab09() {
 					int fpv = getGray(imG, x + dx[irany], y + dy[irany]);
 					int pvout = getGray(imKi, x + dx[irany], y + dy[irany]);
 					if (fpv == fp && pvout == 8) {
-						// ha ide jutunk, akkor találtunk olyan szomszédot, ahol még
-						// nincs eldöntve a kifelé folyás iránya
-							// az ilyen (x,y) képpontokat felvesszük a FIFO listára
+						// ha ide jutunk, akkor talÃ¡ltunk olyan szomszÃ©dot, ahol mÃ©g
+						// nincs eldÃ¶ntve a kifelÃ© folyÃ¡s irÃ¡nya
+							// az ilyen (x,y) kÃ©ppontokat felvesszÃ¼k a FIFO listÃ¡ra
 						if (added == 0) fifo[nextIn++] = Point(x, y);
 						added++;
 					}
@@ -1331,12 +1331,12 @@ void lab09() {
 		}
 	}
 
-	// amíg ki nem ürül a FIFO lista
+	// amÃ­g ki nem Ã¼rÃ¼l a FIFO lista
 	while (nextOut < nextIn) {
-		// kiveszünk egy képpontot a listáról
+		// kiveszÃ¼nk egy kÃ©ppontot a listÃ¡rÃ³l
 		Point p = fifo[nextOut++];
 		int fp = getGray(imG, p.x, p.y);
-		// megkeressük az összes olyan szomszédját, ahol még nincs eldöntve a kifolyás iránya
+		// megkeressÃ¼k az Ã¶sszes olyan szomszÃ©djÃ¡t, ahol mÃ©g nincs eldÃ¶ntve a kifolyÃ¡s irÃ¡nya
 		for (uchar irany = 0; irany < 8; ++irany) {
 			if (p.x + dx[irany] >= 0 && p.x + dx[irany] < imBe.cols && p.y + dy[irany] >=
 				0 &&
@@ -1344,43 +1344,43 @@ void lab09() {
 				int fpv = getGray(imG, p.x + dx[irany], p.y + dy[irany]);
 				int pvout = getGray(imKi, p.x + dx[irany], p.y + dy[irany]);
 				if (fp == fpv && pvout == 8) {
-					// bejelöljük a kifelé folyás irányát a szomszédtól felénk
+					// bejelÃ¶ljÃ¼k a kifelÃ© folyÃ¡s irÃ¡nyÃ¡t a szomszÃ©dtÃ³l felÃ©nk
 					setGray(imKi, p.x + dx[irany], p.y + dy[irany], (irany + 4) % 8);
-					// bejelöljük, hogy a szomszéd képpontban megvan a kifelé folyás
-					// iránya
+					// bejelÃ¶ljÃ¼k, hogy a szomszÃ©d kÃ©ppontban megvan a kifelÃ© folyÃ¡s
+					// irÃ¡nya
 					setGray(imMap, p.x + dx[irany], p.y + dy[irany], 255);
-					// bejelöljük a befelé folyás irányát
+					// bejelÃ¶ljÃ¼k a befelÃ© folyÃ¡s irÃ¡nyÃ¡t
 					setGray(imBe, p.x, p.y, bits[(irany + 4) % 8] | getGray(imBe, p.x,
 						p.y));
-					// az újonnan bejelölt szomszéd felkerül a listára
+					// az Ãºjonnan bejelÃ¶lt szomszÃ©d felkerÃ¼l a listÃ¡ra
 					fifo[nextIn++] = Point(p.x + dx[irany], p.y + dy[irany]);
 				}
 			}
 		}
 	}
 
-	// megmutatjuk az ablakban a lekezelt képpontok térképét és várunk gombnyomásra
-	imshow("Lekezelt képpontok térképe", imMap);
+	// megmutatjuk az ablakban a lekezelt kÃ©ppontok tÃ©rkÃ©pÃ©t Ã©s vÃ¡runk gombnyomÃ¡sra
+	imshow("Lekezelt kÃ©ppontok tÃ©rkÃ©pe", imMap);
 	waitKey();
 
-	// Step 3 - megkeressük a völgyekhez tartozó képpontokat a gradiens térképen
-	// Keresünk olyan képpontot, amilyikbõl még nincs bejelölve a kifelé folyás iránya
-	// Az ilyen képpontot kinevezzük lokális minimumnak és megkeressük körülötte azon
-	// pontokat, amelyiknek még nincs kifelé folyása, ezekbõl mind a lokális minimum felé
-	// fog folyni a víz
-		// Szükségünk van egy veremre
+	// Step 3 - megkeressÃ¼k a vÃ¶lgyekhez tartozÃ³ kÃ©ppontokat a gradiens tÃ©rkÃ©pen
+	// KeresÃ¼nk olyan kÃ©ppontot, amilyikbÃµl mÃ©g nincs bejelÃ¶lve a kifelÃ© folyÃ¡s irÃ¡nya
+	// Az ilyen kÃ©ppontot kinevezzÃ¼k lokÃ¡lis minimumnak Ã©s megkeressÃ¼k kÃ¶rÃ¼lÃ¶tte azon
+	// pontokat, amelyiknek mÃ©g nincs kifelÃ© folyÃ¡sa, ezekbÃµl mind a lokÃ¡lis minimum felÃ©
+	// fog folyni a vÃ­z
+		// SzÃ¼ksÃ©gÃ¼nk van egy veremre
 	Point* stack = new Point[imBe.cols * imBe.rows];
 	int nrStack = 0;
-	// Bejárjuk a képet (x,y)-nal
+	// BejÃ¡rjuk a kÃ©pet (x,y)-nal
 	for (int x = 0; x < imBe.cols; ++x) {
 		for (int y = 0; y < imBe.rows; ++y)
 		{
 			int fp = getGray(imG, x, y);
 			int pout = getGray(imKi, x, y);
-			// Amelyik képpontban már megvan a kifelé folyás irányam azzal nem kell foglalkozni
+			// Amelyik kÃ©ppontban mÃ¡r megvan a kifelÃ© folyÃ¡s irÃ¡nyam azzal nem kell foglalkozni
 			if (pout != 8) continue;
-			// pout egy lokális minimumnak lesz kinevezve
-			// Megkeressük azokat a szomszédokat, amelyeknek még nincs meg a kifelé folyási irányuk
+			// pout egy lokÃ¡lis minimumnak lesz kinevezve
+			// MegkeressÃ¼k azokat a szomszÃ©dokat, amelyeknek mÃ©g nincs meg a kifelÃ© folyÃ¡si irÃ¡nyuk
 			for (uchar irany = 0; irany < 8; ++irany) {
 				if (x + dx[irany] >= 0 && x + dx[irany] < imBe.cols && y + dy[irany] >= 0 &&
 					y + dy[irany] < imBe.rows)
@@ -1389,21 +1389,21 @@ void lab09() {
 					int pvout = getGray(imKi, x + dx[irany], y + dy[irany]);
 					if (pvout == 8 && fp == fpv)
 					{
-						// itt találtunk olyan szomszédot
-					   // bejelöljük a kifelé folyást a lokális minimum felé
+						// itt talÃ¡ltunk olyan szomszÃ©dot
+					   // bejelÃ¶ljÃ¼k a kifelÃ© folyÃ¡st a lokÃ¡lis minimum felÃ©
 						setGray(imKi, x + dx[irany], y + dy[irany], (irany + 4) % 8);
 						setGray(imMap, x + dx[irany], y + dy[irany], 255);
 						setGray(imBe, x, y, bits[(irany + 4) % 8] | getGray(imBe, x, y));
-						// a szomszéd képpontot betesszük a verembe
+						// a szomszÃ©d kÃ©ppontot betesszÃ¼k a verembe
 						stack[nrStack++] = Point(x + dx[irany], y + dy[irany]);
 					}
 				}
 			}
-			// amíg ki nem ürül a verem
+			// amÃ­g ki nem Ã¼rÃ¼l a verem
 			while (nrStack > 0)
 			{
-				// kiveszünk egy képpontot és megnézzük, hogy a szomszédai között van-e
-				// olyan, akinek nincs megjelölve a kifelé folyás iránya
+				// kiveszÃ¼nk egy kÃ©ppontot Ã©s megnÃ©zzÃ¼k, hogy a szomszÃ©dai kÃ¶zÃ¶tt van-e
+				// olyan, akinek nincs megjelÃ¶lve a kifelÃ© folyÃ¡s irÃ¡nya
 				Point pv = stack[--nrStack];
 				int fpv = getGray(imG, pv.x, pv.y);
 				int pvout = getGray(imKi, pv.x, pv.y);
@@ -1411,20 +1411,20 @@ void lab09() {
 					if (pv.x + dx[irany] >= 0 && pv.x + dx[irany] < imBe.cols && pv.y +
 						dy[irany] >= 0 &&
 						pv.y + dy[irany] < imBe.rows) {
-						// itt találtunk létezõ szomszédot
+						// itt talÃ¡ltunk lÃ©tezÃµ szomszÃ©dot
 						int fpvv = getGray(imG, pv.x + dx[irany], pv.y + dy[irany]);
 						int pvvout = getGray(imKi, pv.x + dx[irany], pv.y + dy[irany]);
 						//if (fpv==fpvv && pvvout==8 && (!(pv.x+dx[pvout]==x && pv.y + dy[pvout] == y)))
 						if (fpv == fpvv && pvvout == 8 && (!(pv.x + dx[irany] == x &&
 							pv.y + dy[irany] == y))) {
-							// itt találtunk olyan szomszédot
-						   // bejelöljük a kifelé folyást pout felé
+							// itt talÃ¡ltunk olyan szomszÃ©dot
+						   // bejelÃ¶ljÃ¼k a kifelÃ© folyÃ¡st pout felÃ©
 							setGray(imMap, pv.x + dx[irany], pv.y + dy[irany], 255);
 							setGray(imKi, pv.x + dx[irany], pv.y + dy[irany], (irany + 4)
 								% 8);
 							setGray(imBe, pv.x, pv.y, bits[(irany + 4) % 8] |
 								getGray(imBe, pv.x, pv.y));
-							// a szomszéd képpontot betesszük a verembe
+							// a szomszÃ©d kÃ©ppontot betesszÃ¼k a verembe
 							stack[nrStack++] = Point(pv.x + dx[irany], pv.y + dy[irany]);
 						}
 					}
@@ -1433,37 +1433,37 @@ void lab09() {
 		}
 	}
 
-	// megmutatjuk az ablakban a lekezelt képpontok térképét és várunk gombnyomásra
-	// itt már csak izolált fekete képpontok lesznek a fehér képen, ezek a lokális
+	// megmutatjuk az ablakban a lekezelt kÃ©ppontok tÃ©rkÃ©pÃ©t Ã©s vÃ¡runk gombnyomÃ¡sra
+	// itt mÃ¡r csak izolÃ¡lt fekete kÃ©ppontok lesznek a fehÃ©r kÃ©pen, ezek a lokÃ¡lis
 	// minimumok
-	imshow("Lekezelt képpontok térképe", imMap);
+	imshow("Lekezelt kÃ©ppontok tÃ©rkÃ©pe", imMap);
 	waitKey();
 
 	// Step 4
-	// feltérképezzük a vízgyûjtõ medencéket a lokális minimumokból kiindulva a víz
-	// folyásával fordított irányba haladva
-		// minden vízgyûjtõ medencében kiszámoljuk az átlagos és a medián színt
-		// mindkettõbõl generálunk egy-egy külön kimeneti szegmentált képet
-		// ez a puffer a medián számításához kell
+	// feltÃ©rkÃ©pezzÃ¼k a vÃ­zgyÃ»jtÃµ medencÃ©ket a lokÃ¡lis minimumokbÃ³l kiindulva a vÃ­z
+	// folyÃ¡sÃ¡val fordÃ­tott irÃ¡nyba haladva
+		// minden vÃ­zgyÃ»jtÃµ medencÃ©ben kiszÃ¡moljuk az Ã¡tlagos Ã©s a mediÃ¡n szÃ­nt
+		// mindkettÃµbÃµl generÃ¡lunk egy-egy kÃ¼lÃ¶n kimeneti szegmentÃ¡lt kÃ©pet
+		// ez a puffer a mediÃ¡n szÃ¡mÃ­tÃ¡sÃ¡hoz kell
 	uint* medbuff = new uint[imBe.cols * imBe.rows];
 	int label = 0;
 	nextIn = 0;
 	int spotSum[3];
-	// Bejárjuk a képet (x,y)-nal
+	// BejÃ¡rjuk a kÃ©pet (x,y)-nal
 	for (int x = 0; x < imBe.cols; ++x) for (int y = 0; y < imBe.rows; ++y) {
-		// keresünk lokális mimimumot
+		// keresÃ¼nk lokÃ¡lis mimimumot
 		int pout = getGray(imKi, x, y);
 		if (pout != 8) continue;
-		// találtunk lokális mimimumot, betesszük a verembe
+		// talÃ¡ltunk lokÃ¡lis mimimumot, betesszÃ¼k a verembe
 		stack[nrStack++] = Point(x, y);
 		for (int i = 0; i < 3; ++i) { spotSum[i] = 0; }
-		// amíg üres nem lesz a verem
+		// amÃ­g Ã¼res nem lesz a verem
 		while (nrStack > 0) {
-			// Kiveszünk egy képpontot a verembõl és megnézzük, honnan folyik felénk a
-			// víz
-				// Ahonnan felénk folyik a víz, azt a képpontot felvesszük az aktuális
-				// régióba és
-				// betesszük a verembe is.
+			// KiveszÃ¼nk egy kÃ©ppontot a verembÃµl Ã©s megnÃ©zzÃ¼k, honnan folyik felÃ©nk a
+			// vÃ­z
+				// Ahonnan felÃ©nk folyik a vÃ­z, azt a kÃ©ppontot felvesszÃ¼k az aktuÃ¡lis
+				// rÃ©giÃ³ba Ã©s
+				// betesszÃ¼k a verembe is.
 			Point pv = stack[--nrStack];
 			fifo[nextIn++] = pv;
 			uchar r, g, b;
@@ -1487,37 +1487,37 @@ void lab09() {
 				}
 			}
 		}
-		// a label azt számolja, hogy hány régió van összesen a szegmentált képen
+		// a label azt szÃ¡molja, hogy hÃ¡ny rÃ©giÃ³ van Ã¶sszesen a szegmentÃ¡lt kÃ©pen
 		label++;
 		if (nextIn < 2) printf("%d", nextIn);
 		for (int i = 0; i < 3; ++i) {
 			spotSum[i] = round(spotSum[i] / nextIn);
 		}
-		// kiszámoljuk a medián színt a quicksort segítségével
+		// kiszÃ¡moljuk a mediÃ¡n szÃ­nt a quicksort segÃ­tsÃ©gÃ©vel
 		qsort(medbuff, nextIn, sizeof(uint), compare);
 		int medR = (medbuff[nextIn / 2] % 0x1000000) / 0x10000;
 		int medG = (medbuff[nextIn / 2] % 0x10000) / 0x100;
 		int medB = (medbuff[nextIn / 2] % 0x100);
 		for (int i = 0; i < nextIn; ++i) //if (getGray(imMask, fifo[i].x, fifo[i].y) > 128)
 		{
-			// itt festjük ki a régiót az átlagos színnel
+			// itt festjÃ¼k ki a rÃ©giÃ³t az Ã¡tlagos szÃ­nnel
 			setColor(imSegm, fifo[i].x, fifo[i].y, (uchar)spotSum[2], (uchar)
 				spotSum[1], (uchar)spotSum[0]);
-			// itt festjük ki a régiót a medián színnel
+			// itt festjÃ¼k ki a rÃ©giÃ³t a mediÃ¡n szÃ­nnel
 			setColor(imSegmMed, fifo[i].x, fifo[i].y, (uchar)medR, (uchar)medG,
 				(uchar)medB);
 		}
 		nextIn = 0;
 	}
-	// memória felszabadítás
+	// memÃ³ria felszabadÃ­tÃ¡s
 	free(fifo);
 	free(stack);
 	free(medbuff);
 	// no more steps
 	printf("\nRegions: %d \n", label);
-	// megmutatjuk egy ablakban a medián színekkel készített képet
+	// megmutatjuk egy ablakban a mediÃ¡n szÃ­nekkel kÃ©szÃ­tett kÃ©pet
 	imshow("Median", imSegmMed);
-	// megmutatjuk egy masik ablakban az átlagos színekkel készített képet
+	// megmutatjuk egy masik ablakban az Ã¡tlagos szÃ­nekkel kÃ©szÃ­tett kÃ©pet
 	imshow("Atlag", imSegm);
 	waitKey();
 }
@@ -1805,7 +1805,7 @@ void lab10() {
             // Optimizing video speed
             //if (frameCount++ % 2 != 0) continue;
 
-            // Difference between background and currect frame
+            // Difference between background and current frame
             Mat diffFrame = (background - frame) + (frame - background);
 
             // Split the frame into its channels, and calculate the sum of the channels
