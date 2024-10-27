@@ -1028,7 +1028,7 @@ void lab08() {
     //imshow("Red channel", imRed);
     //waitKey(0);
 
-    // We will work with the blue channel (circles most visible)
+    // We will work with the green channel (circles most visible)
     // Run Canny edge detection
     Mat edges;
     Canny(imGreen, edges, 40, 100);
